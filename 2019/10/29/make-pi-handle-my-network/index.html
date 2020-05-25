@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconz-64.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconz-32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconz-16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,树莓派,网络," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="自动拨号的事情还是交给树莓派来完成吧一点吐槽及原因在历时一个半月的宿舍楼网络装修工程之后，本来光纤入户的寝室网络就被无线AP和一个校园网的无线热点替换了。有线网络无论是连接速度还是稳定性都是远在无线网络之上的，而且有线网络可以通过路由器自带的PPPoE拨号实现自动联网，而无线热点在连接上之后还要打开深澜的拨号网页进行手动拨号，手机自带的热点连接网页甚至不支持记住帐号密码。不过更为重要的是，要想使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动拨号的事情还是交给树莓派来完成吧">
+<meta property="og:url" content="https://changyoo.xyz/2019/10/29/make-pi-handle-my-network/index.html">
+<meta property="og:site_name" content="Zcy&#39;s Blog">
+<meta property="og:description" content="自动拨号的事情还是交给树莓派来完成吧一点吐槽及原因在历时一个半月的宿舍楼网络装修工程之后，本来光纤入户的寝室网络就被无线AP和一个校园网的无线热点替换了。有线网络无论是连接速度还是稳定性都是远在无线网络之上的，而且有线网络可以通过路由器自带的PPPoE拨号实现自动联网，而无线热点在连接上之后还要打开深澜的拨号网页进行手动拨号，手机自带的热点连接网页甚至不支持记住帐号密码。不过更为重要的是，要想使用">
+<meta property="og:image" content="https://changyoo.xyz/2019/10/29/make-pi-handle-my-network/WLAN0-IP.jpg">
+<meta property="article:published_time" content="2019-10-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-25T08:37:20.314Z">
+<meta property="article:author" content="zcy">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="树莓派">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://changyoo.xyz/2019/10/29/make-pi-handle-my-network/WLAN0-IP.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://changyoo.xyz/2019/10/29/make-pi-handle-my-network/"/>
+
+
+
+
+
+  <title>自动拨号的事情还是交给树莓派来完成吧 | Zcy's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zcy's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://changyoo.xyz/2019/10/29/make-pi-handle-my-network/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zcy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zcy's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">自动拨号的事情还是交给树莓派来完成吧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-29T00:00:00+08:00">
+                2019-10-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/29/make-pi-handle-my-network/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/10/29/make-pi-handle-my-network/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">阅读量：
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>人次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="自动拨号的事情还是交给树莓派来完成吧"><a href="#自动拨号的事情还是交给树莓派来完成吧" class="headerlink" title="自动拨号的事情还是交给树莓派来完成吧"></a>自动拨号的事情还是交给树莓派来完成吧</h1><h2 id="一点吐槽及原因"><a href="#一点吐槽及原因" class="headerlink" title="一点吐槽及原因"></a>一点吐槽及原因</h2><p>在历时一个半月的宿舍楼网络装修工程之后，本来光纤入户的寝室网络就被无线AP和一个校园网的无线热点替换了。有线网络无论是连接速度还是稳定性都是远在无线网络之上的，而且有线网络可以通过路由器自带的PPPoE拨号实现自动联网，而无线热点在连接上之后还要打开深澜的拨号网页进行手动拨号，手机自带的热点连接网页甚至不支持记住帐号密码。不过更为重要的是，要想使用校园网必须要办理运营商的个人独享宽带套餐，因为套餐是独享性质的，所以限定了同一时间只能有一个设备拨号联网（<del>都9102年了人手一部手机+电脑难道不是标配吗？？</del>）。</p>
+<p>出于懒得手动完成拨号以及绕过同一账号只能同时在一台设备上登陆的限制，有了本篇尝试使用树莓派（或者其他什么Linux的终端）来完成自动拨号并将网络通过路由器的WAN口进行共享，以此实现路由器的“无线中继”</p>
+<a id="more"></a>
+
+<p>有大概两种方案可以实现我的这一小愿望。</p>
+<h3 id="1-通过在树莓派上运行OpenWrt等软路由系统来简单的完成无线中继的操作"><a href="#1-通过在树莓派上运行OpenWrt等软路由系统来简单的完成无线中继的操作" class="headerlink" title="1 - 通过在树莓派上运行OpenWrt等软路由系统来简单的完成无线中继的操作"></a>1 - 通过在树莓派上运行OpenWrt等软路由系统来简单的完成无线中继的操作</h3><p>作为第一种方案，这也是我最开始尝试的，在OpenWrt官网上下载并刷写系统，然后在树莓派上启动，像访问路由器一样进行初始化设定，然后使用自带的无线(Wireless)选项来扫描无线网络，连上该死的校园网热点，再在接口页面将无线设置为WAN，有线设置为LAN。同时在路由器端设置WAN口为自动获取IP即可实现将路由器连上校园网。随后在树莓派上安装python并写好实现自动拨号的代码，设置诸如开机自动运行的拨号条件即可实现我的需求。</p>
+<p>这一方案十分的简单易懂，每一步都没有太大的难度，只是按按网页上的按钮就能完成大多数操作。但是事情到了我这里便不是这样发展的了，在最开始尝试的时候就遇到了棘手的问题，即我下载的OpenWrt系统没有无线这一选项，即使是通过shell操作也没有见到任何无线相关的接口，仿佛WLAN硬件从我的树莓派上消失了一样。开始我怀疑的是，可能无线网卡真的物理损坏了，毕竟在漫长的暑假中没有任何保护，吃了足足两个多月的灰。于是我赶忙刷了一个官方的系统，直到在系统中见到并正常使用了WLAN后才确认是OpenWrt固件自己的问题。</p>
+<p>为了排查OpenWrt固件的问题，我在网络上找到了一个自编译的OpenWrt版本。就是[[自编译 OpenWrt R9.6.19 固件]][<a href="https://mlapp.cn/369.html]" target="_blank" rel="noopener">https://mlapp.cn/369.html]</a> 。怀着能够一路顺利下一步的心情，我二话不说直接让树莓派跑上了这个版本。一路下一步之后，终于看到了网页上显示的大大的无线的选项，点击无线，点击扫描……在稍等了片刻之后，随着网页的刷新我只看到一个叫OpenWrt的热点，这无疑是树莓派自己的热点，除此之外没有见到有任何其他的可用网络。起初我以为是WLAN参数的设置问题，在尝试关闭自带的热点和将wlan0接口的模式换成客户端这两种操作的各种组合之后，扫描热点完成之后的可用网络列表里变得干干净净，一度让我觉得是网页无响应了，但在接入shell之后确认是没有任何的扫描结果，而非网页的问题。</p>
+<p>到此为之我已经尝试过OpenWrt固件的很多版本，从18.XX到自编译的版本，无一例外不是没有无线的接口选项就是扫描列表空空如也。在这时我看到就在自编译版本的网页下，作者还发布了编译的教程[<a href="https://mlapp.cn/373.html" target="_blank" rel="noopener">自编译树莓派 OpenWrt 完全指南</a>]（在此感谢作者的无私奉献）。略读之后发现作者写得简单易懂，就连环境也是用的docker镜像的方式，在跟随作者的指南一步步操作之后，我成功地在ubuntu上完成了编译的准备，在一切准备就绪只差执行编译命令 <code>make V=99 -j1</code> 的时候，我完全没有在意指南开头大大的前期准备里提及的 *<em>分区剩余空间应大于 50G *</em> 这句话，由此有了下一篇博客（关于Arch-Linux）。跳过中间的坎坷，来到编译完成得到镜像的时候，在我熟练地开启Luci控制台之后，遇到的仍然是扫描不到可用网络的问题。</p>
+<p>在我心灰意冷的时候，突然想起了OpenWrt的前项目LEDE，LEDE与OpenWrt固件类似，但是更加远古。不过没有关系，只要能够连上校园网并且做到接口转发就行，这对于这类为实现路由器功能的固件来说只是基础罢了。更加熟练地在SD卡上刷进系统，插入树莓派，接上电源，开机！嗯？只有电源LED在闪？还是三长四短？由此又成功触发支线剧情，详见另一篇博客（关于树莓派的小事）。最终结果当然是甚至没有能成功进入系统，更别谈什么无线网络的设置了。</p>
+<p>自此我把该踩的坑也踩了，能走的弯路全都走了，也没有能成功的达成目的，遂<del>果断</del>放弃，转而选择方案二。</p>
+<h3 id="2-在Linux系统上直接实现”无线中继“的功能"><a href="#2-在Linux系统上直接实现”无线中继“的功能" class="headerlink" title="2 - 在Linux系统上直接实现”无线中继“的功能"></a>2 - 在Linux系统上直接实现”无线中继“的功能</h3><p>第二种方案是在查阅第一种方案当中遇到的问题的时候发现的。即不通过现成的软路由固件，而是通过Linux系统进行接口转发而间接达成目的。没有一开始便选择这一方案的原因在于直接手动进行底层的一些配置对我而言太过复杂繁琐，具有一定的难度加之缺少了软路由固件当中自带的各种开箱即用的功能。而好处也是有的，那就是一定能够达成目标。总之最后我成功地通过这一方法满足了我的需求。</p>
+<p>首先是一个十分简单的网络拓扑：</p>
+<p><strong>校园网——wlan0——转发——eth0——路由器</strong></p>
+<p>其中树莓派在中间充当转发的角色，将两接口直接的数据报转发，并在每天的重启之后完成自动拨号。</p>
+<p>按照拓扑的第一步当然就是连上校园网了，通过iw工具和ifconfig即可完成</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig wlan0 up <span class="comment"># 开启wifi</span></span><br><span class="line">iw dev wlan0 connect hostpd <span class="comment"># hostpd为热点名</span></span><br></pre></td></tr></table></figure>
+
+<p>起初我的WLAN是开机就自动打开的，后来不知道瞎搞了什么设置就必须要手动才能打开了，在开机脚本<code>/etc/rc.local</code> 里执行就行，无伤大雅。又因为其他不明原因 <del>不是因为懒得看日志</del> ，DHCP服务在开机的时候是不能够正常开启的，需要后续手动一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dhcpcd wlan0  <span class="comment"># 使用树莓派自带的dhcpcd服务即可</span></span><br></pre></td></tr></table></figure>
+
+<p>此时如果使用ifconfig查看接口信息的话，就可以看到wlan0已经顺利连上校园网并且获取到了IP地址</p>
+<p><img src="./WLAN0-IP.jpg" alt="WLAN0-IP"></p>
+<p>接下来设置一下eth0到路由器端的连接，将eth0设置静态IP为192.168.10.1即可，随后是路由器上的设置，WAN口参数设置为同网段的静态IP如192.168.10.2。</p>
+<p>最后一步就是设置树莓派的数据报转发。首先要先打开Linux的转发功能</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl net.ipv4.ip_forward=1</span><br></pre></td></tr></table></figure>
+
+<p>再通过iptables的nat表来实现将路由器端的内网IP换成树莓派的公网IP，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line"><span class="comment"># 这一规则允许任意地址到任意地址的确认包和关联包通过</span></span><br><span class="line">iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE</span><br><span class="line"><span class="comment"># 这一规则会处理NAT地址转换，实现内网IP到外网IP的切换</span></span><br></pre></td></tr></table></figure>
+
+<p>其中关于第一条规则，鉴于本人还不是很明白，故直接引用来自 <a href="http://xstarcd.github.io/wiki/Linux/iptables_forward_internetshare.html" target="_blank" rel="noopener">[通过iptables实现端口转发和内网共享上网]</a> 的一段解释，感觉讲得挺清楚的 <del>也还是不太明白</del></p>
+<blockquote>
+<h3 id="状态机制"><a href="#状态机制" class="headerlink" title="状态机制"></a>状态机制</h3><p>  下面我们就说说我一直在上面提到的关于那个ESTABLISHED,RELATED的规则是怎么回事，到底有什么用处。</p>
+<p>  说这个东西就要简单说一下网络的数据通讯的方式，我们知道，网络的访问是双向的，也就是说一个Client与Server之间完成数据交换需要双方的发包与收包。在netfilter中，有几种状态，也就是<code>new, established,related,invalid</code>。</p>
+<p>  当一个客户端，在本文例一中，内网的一台机器访问外网，我们设置了规则允许他出去，但是没有设置允许回来的规则阿，怎么完成访问呢？这就是netfilter的 <strong>状态机制</strong> ，当一个lan用户通过这个linux访问外网的时候，它发送了一个请求包，这个包的状态是new,当外网回包的时候他的状态就是established,所以，linux知道，哦，这个包是我的内网的一台机器发出去的应答包，他就放行了。</p>
+<p>  而外网试图对内发起一个新的连接的时候，他的状态是new,所以linux压根不去理会它。这就是我们为什么要加这一句的原因。</p>
+<p>  还有那个related,他是一个关联状态，什么会用到呢？tftp,ftp都会用到，因为他们的传输机制决定了，它不像http访问那样，<code>Client_IP: port--&gt;server:80</code>然后<code>server:80--&gt;Client_IP:port</code>，ftp使用tcp21建立连接，使用20端口发送数据，其中又有两种方式，一种主动active mode，一种被动passive mode。主动模式下，client使用port命令告诉server我用哪一个端口接受数据，然后server主动发起对这个端口的请求。被动模式下，server使用port命令告诉客户端，它用那个端口监听，然后客户端发起对他的数据传输，所以这对于一个防火墙来说就是比较麻烦的事情，因为有可能会有new状态的数据包，但是它又是合理的请求，这个时候就用到这个related状态了，他就是一种关联，在linux中，有个叫 ftp_conntrack的模块，它能识别port命令，然后对相应的端口进行放行。</p>
+</blockquote>
+<p>到这一步之后就已经实现了路由器到校园网的连接，接着来讲讲自动拨号的实现。</p>
+<h2 id="使用Python实现校园网自动拨号"><a href="#使用Python实现校园网自动拨号" class="headerlink" title="使用Python实现校园网自动拨号"></a>使用Python实现校园网自动拨号</h2><p>在讲实现之前先讲解以下学校校园网的拨号或者说是登录的方式。校园网的接入验证系统使用的是深澜的系统，版本号是v1.14，通过网站登陆的方式进行认证。在网上一番查阅之后，发现了大佬写的一篇python模拟登录的博客 <a href="https://blog.csdn.net/qq_41797946/article/details/89417722" target="_blank" rel="noopener">[深澜认证协议分析,python模拟登录]</a> ，在详细看了分析过程之后，<del>我就直接套用了大佬的代码</del> 。具体的代码在原博客中已经贴了，所以就只讲一下我在实际运行的时候所遇到的一些问题。</p>
+<p>首先是获取IP地址的问题，继上文所说，在接口wlan0和eth0都有IP地址，这里只要wlan0接口的IP地址就可以了，查阅资料之后，使用socket的方法获得IP地址，通过socket的方法可以指定网络接口。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socekt ,fcntl, struct</span><br><span class="line"><span class="comment">#......</span></span><br><span class="line">wlan0=<span class="string">'wlan0'</span></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)</span><br><span class="line">ip = socket.inet_ntoa(fcntl.ioctl(s.fileno(), <span class="number">0x8915</span>, struct.pack(<span class="string">'256s'</span>, wlan0[:<span class="number">15</span>]))[<span class="number">20</span>:<span class="number">24</span>]) <span class="comment"># 获取wlan0的ip</span></span><br></pre></td></tr></table></figure>
+
+<p>其次是在运行时报错，有两个关于编码的错误，一个通过在程序最开始添加 <code># -\*- coding: utf-8 -\*</code> 即可。另一个是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UnicodeDecodeError: <span class="string">'ascii'</span> codec can<span class="string">'t decode byte 0xe8 in position 1: ordinal not in range(128).</span></span><br></pre></td></tr></table></figure>
+
+<p>ASCII编码的错误，在 <a href="https://stackoverflow.com/questions/21129020/how-to-fix-unicodedecodeerror-ascii-codec-cant-decode-byte" target="_blank" rel="noopener">How to fix: “UnicodeDecodeError: ‘ascii’ codec can’t decode byte”</a> 中找到解决方法，但是又留意到错误都是报在print语句中有中文的时候的，遂直接将原始代码中的中文全部换成英文即解。而后续在将程序放到开机自启动的脚本之后又有同样的编码错误，后查证是因为自启动脚本是由Linux的sh执行的，而在登录shell则是bash，更换开机shell后成功解决。</p>
+<p>自此已经顺利完成了自动拨号并给路由器连上网络的想法。</p>
+<h3 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h3><p>一开始有这个自动联网的想法的时候完全没有考虑到会有这么的麻烦，想偷懒反而付出了更多的努力，不过即便这样我还是难得的坚持到底还不是因为垃圾校园网的反人类设定。本篇博客理论上也是由于这个校园网带出来的，写出来旨在记录折腾的一路上的各种零零碎碎的知识和收获，以免以后忘记了，也尝试了一番写作的感觉。在计算机方面我还是个萌新，如有错误还请各位大佬指正。谢谢。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>[1] <a href="https://steinslab.io/archives/1103" target="_blank" rel="noopener">[趴会儿project]No.003 基于树莓派的ipv6+OpenVPN校园网免流量无线热点/路由器</a></p>
+<p>[2] <a href="https://steinslab.io/archives/1211" target="_blank" rel="noopener">[趴会儿project]No.005 用一种“新思路”打造树莓派软无线路由器</a></p>
+<p>[3] <a href="https://www.howtoing.com/nat_iptables" target="_blank" rel="noopener">使用iptables的NAT的逐步配置</a></p>
+<p>[4] <a href="http://www.embeddedlinux.org.cn/emb-linux/mobile/raspberrypi/2017/0323/6321.html" target="_blank" rel="noopener">用树莓派打造无线中继科学上网路由器</a></p>
+<p>[5] <a href="http://xstarcd.github.io/wiki/Linux/iptables_forward_internetshare.html" target="_blank" rel="noopener">通过iptables实现端口转发和内网共享上网</a></p>
+<p>[6] <a href="https://lesca.me/archives/iptables-tutorial-structures-configuratios-examples.html" target="_blank" rel="noopener">iptables详细教程：基础、架构、清空规则、追加规则、应用实例</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    zcy
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://changyoo.xyz/2019/10/29/make-pi-handle-my-network/" title="自动拨号的事情还是交给树莓派来完成吧">https://changyoo.xyz/2019/10/29/make-pi-handle-my-network/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag"># 树莓派</a>
+          
+            <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/29/first-post-to-my-blog/" rel="prev" title="这是我博客的第一文章">
+                这是我博客的第一文章 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">zcy</p>
+              <p class="site-description motion-element" itemprop="description">一个啥都有的个人博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SSoyca" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="wgYazp8wt@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#自动拨号的事情还是交给树莓派来完成吧"><span class="nav-number">1.</span> <span class="nav-text">自动拨号的事情还是交给树莓派来完成吧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一点吐槽及原因"><span class="nav-number">1.1.</span> <span class="nav-text">一点吐槽及原因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-通过在树莓派上运行OpenWrt等软路由系统来简单的完成无线中继的操作"><span class="nav-number">1.1.1.</span> <span class="nav-text">1 - 通过在树莓派上运行OpenWrt等软路由系统来简单的完成无线中继的操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-在Linux系统上直接实现”无线中继“的功能"><span class="nav-number">1.1.2.</span> <span class="nav-text">2 - 在Linux系统上直接实现”无线中继“的功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#状态机制"><span class="nav-number">1.1.3.</span> <span class="nav-text">状态机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Python实现校园网自动拨号"><span class="nav-number">1.2.</span> <span class="nav-text">使用Python实现校园网自动拨号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#碎碎念"><span class="nav-number">1.2.1.</span> <span class="nav-text">碎碎念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">1.3.</span> <span class="nav-text">参考链接</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zcy</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://zcysblogs.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://changyoo.xyz/2019/10/29/make-pi-handle-my-network/';
+          this.page.identifier = '2019/10/29/make-pi-handle-my-network/';
+          this.page.title = '自动拨号的事情还是交给树莓派来完成吧';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zcysblogs.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
