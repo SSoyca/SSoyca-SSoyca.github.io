@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconz-64.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconz-32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconz-16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ctf,web," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言试着直接上手入门题来入门，结果发现难度不是很大，而且还循序渐进地学了不少东西，对我来说算是一个很好的入门方式。打算在这里简单总结一下每一题中学到的东西，虽然不是很难但是很零碎，也方便以后忘记了能查到，就当一个简单的Writeup。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web-1 攻防世界Web入门题Writeup">
+<meta property="og:url" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/index.html">
+<meta property="og:site_name" content="Zcy&#39;s Blog">
+<meta property="og:description" content="前言试着直接上手入门题来入门，结果发现难度不是很大，而且还循序渐进地学了不少东西，对我来说算是一个很好的入门方式。打算在这里简单总结一下每一题中学到的东西，虽然不是很难但是很零碎，也方便以后忘记了能查到，就当一个简单的Writeup。">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/2-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/2-2.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/2-3.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/2-4.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/2-5.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/3-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/4-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/5-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/5-2.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/6-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/6-3.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/7-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/7-2.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/7-3.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/7-4.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/7-5.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/8-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/8-2.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/9-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/9-2.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/9-3.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/10-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/10-2.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/10-3.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/11-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/11-2.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/11-3.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/12-1.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/12-3.png">
+<meta property="og:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/12-4.png">
+<meta property="article:published_time" content="2020-07-01T14:59:06.000Z">
+<meta property="article:modified_time" content="2020-07-01T15:03:14.264Z">
+<meta property="article:author" content="zcy">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/2-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/"/>
+
+
+
+
+
+  <title>Web-1 攻防世界Web入门题Writeup | Zcy's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zcy's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zcy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zcy's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Web-1 攻防世界Web入门题Writeup</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-01T22:59:06+08:00">
+                2020-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/01/Web-adworld-beginner/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/07/01/Web-adworld-beginner/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>人次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>试着直接上手入门题来入门，结果发现难度不是很大，而且还循序渐进地学了不少东西，对我来说算是一个很好的入门方式。打算在这里简单总结一下每一题中学到的东西，虽然不是很难但是很零碎，也方便以后忘记了能查到，就当一个简单的Writeup。</p>
+<a id="more"></a>
+
+<h2 id="1-view-source"><a href="#1-view-source" class="headerlink" title="1. view_source"></a>1. view_source</h2><p>正如题目所说，直接查看网页源代码即可，但是比较坑的是在chrome上按F12没有反应，要按Ctrl+u才能看到源代码，或者直接访问 <code>view-source:http://220.249.52.000:50000/</code> 也行，两个方法都是打开同一个页面，除此之外BurpSuite抓响应包也行，虽然有些大材小用。顺便贴一个网页的源代码。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Where is the FLAG<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.oncontextmenu=<span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"return false"</span>)</span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.onselectstart=<span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"return false"</span>)</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>FLAG is not here<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- cyberpeace&#123;99975681f60898663cb8ed9aed46e717&#125; --&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-get-post"><a href="#2-get-post" class="headerlink" title="2. get_post"></a>2. get_post</h2><p>如题所示，要点在于get和post，按照网页提示分别使用get和post方法各提交一个变量即可。</p>
+<p><img src="./2-1.png" alt="第一个变量a用get方式提交"></p>
+<p>get方式直接使用网页URL加 <code>/?a=1</code> 进行提交即可，</p>
+<p><img src="./2-2.png" alt="get方式"></p>
+<p>然后网页要求使用post方式提交一个b=2；</p>
+<p><img src="./2-3.png" alt="第二个变量要用post方法"></p>
+<p>这里除了使用HackBar也可以使用BurpSuite抓包并修改提交方法为post实现，因为买不起HackBar的证书，所以使用BurpSuite改包。具体的操作不赘述，在抓到包之后右键选择切换请求方式，这里有一点坑，除了要把b=2用post方法发过去，还要保留原来的a=1，所以切换请求方式之后要对报文做一些修改，如下图所示，即包含b=2，也要有a=1。</p>
+<p><img src="./2-4.png" alt="同时发送两个变量"></p>
+<p>最后跳转的网页就有flag了。</p>
+<p><img src="./2-5.png" alt="flag"></p>
+<h2 id="3-robots"><a href="#3-robots" class="headerlink" title="3. robots"></a>3. robots</h2><p>题目描述如下：</p>
+<blockquote>
+<p>X老师上课讲了Robots协议，小宁同学却上课打了瞌睡，赶紧来教教小宁Robots协议是什么吧。</p>
+</blockquote>
+<p>其中提到了Robots协议，一开始我也不清楚这是个什么协议，后来直接谷歌之后才知道原来网站根目录下的那个robots.txt就是叫Robots协议。所以直接访问这个文件，然后看到有一个Disallow的文件在目录下。</p>
+<p><img src="./3-1.png" alt="robots.txt"></p>
+<p>直接访问这个PHP文件就可以得到flag了。</p>
+<h2 id="4-backup"><a href="#4-backup" class="headerlink" title="4. backup"></a>4. backup</h2><p>题目描述如下：</p>
+<blockquote>
+<p>X老师忘记删除备份文件，他派小宁同学去把备份文件找出来,一起来帮小宁同学吧！</p>
+</blockquote>
+<p>根据网页提示，直接想到文件名是index.php.bak，于是直接访问这个文件得到flag。</p>
+<p>如上的解题方法犹如看过别人的Writeup（虽然我真的看过），让人觉得很不科学，所以除此之外还可以用扫描工具扫一下网站的根目录，以下使用的是dirsearch扫描的，可以看到的结果如下。</p>
+<p><img src="./4-1.png" alt="dirsearch.py-u http://220.249.52.133:41165/ -e *"></p>
+<p>于是访问index.php.bak即可得到flag。</p>
+<h2 id="5-cookie"><a href="#5-cookie" class="headerlink" title="5. cookie"></a>5. cookie</h2><p>题目的描述如下：</p>
+<blockquote>
+<p>X老师告诉小宁他在cookie里放了些东西，小宁疑惑地想：‘这是夹心饼干的意思吗？’</p>
+</blockquote>
+<p>众所周知，网页的cookie并不是夹心饼干，而是存放在客户端的数据，因此这一题与服务器发送的cookie有关，访问网页，按F12查看响应头，在响应头中可以看到服务器给的cookie是 <code>look-here=cookie.php</code>，于是访问该PHP文件。</p>
+<p><img src="./5-1.png" alt="响应头"></p>
+<p>根据网页的提示，再次查看响应头即可在flag字段找到flag。</p>
+<p><img src="./5-2.png" alt="cookie.php的响应头"></p>
+<h2 id="6-disabled-button"><a href="#6-disabled-button" class="headerlink" title="6.disabled_button"></a>6.disabled_button</h2><p>题目的描述如下：</p>
+<blockquote>
+<p>X老师今天上课讲了前端知识，然后给了大家一个不能按的按钮，小宁惊奇地发现这个按钮按不下去，到底怎么才能按下去呢？</p>
+</blockquote>
+<p>结合描述和题目，再访问网页看看，网页中间赫然出现一行字和一个按钮，当然这个按钮没有办法点击。</p>
+<p><img src="./6-1.png" alt="disabled_button"></p>
+<p>F12查看网页源代码，可以看到这个按钮的几个属性，将其中的disabled删除即可点击，或者直接用post方法发送一个<code>auth=flag</code>也可以，这里选择用post方法。</p>
+<p><img src="./6-3.png" alt="post得到flag"></p>
+<h2 id="7-weak-auth"><a href="#7-weak-auth" class="headerlink" title="7. weak_auth"></a>7. weak_auth</h2><p>直接看网页，结合题目意思，要点应该是弱口令爆破，网页提供用户名和密码两个输入。</p>
+<p><img src="./7-1.png" alt="登录页面"></p>
+<p>出于爆破的时间考量，直接指定用户名为最简单的admin，密码直接使用常见密码库。接下来讲一下使用BurpSuite进行爆破的操作方式。</p>
+<ol>
+<li>网页点击login，然后在BurpSuite抓到包后，点击发送到Intruder；</li>
+</ol>
+<p><img src="./7-2.png" alt="Send to Intruder"></p>
+<ol start="2">
+<li>在Intruder中使用右侧按钮确定要爆破的值所在位置。</li>
+</ol>
+<p><img src="./7-3.png" alt="选定password字段的值"></p>
+<ol start="3">
+<li>在Payloads标签中选择合适的字典，这里随便从网上就能找到简单的字典，或者使用自带的字典。</li>
+</ol>
+<p><img src="./7-4.png" alt="payloads"></p>
+<ol start="4">
+<li>点击右上方的Start attack按钮即可开始爆破，在弹出窗口中点击Length栏，将响应报文按长度大小排序，鉴于正确的响应相比于错误的长短不定，可以时不时改变排序规则来确保不会漏过长度不同的报文。</li>
+</ol>
+<p><img src="./7-5.png" alt="437的长度与众不同"></p>
+<p>最后在密码为123456时，报文长度为437与其他报文长度不同，所以使用密码123456进行登录得到flag。</p>
+<h2 id="8-simple-php"><a href="#8-simple-php" class="headerlink" title="8. simple_php"></a>8. simple_php</h2><p>题目描述如下：</p>
+<blockquote>
+<p>小宁听说php是最好的语言,于是她简单学习之后写了几行php代码。</p>
+</blockquote>
+<p>打开网页，网页内容直接给了PHP源码，故本题的要点是代码审计。</p>
+<p><img src="./8-1.png" alt="很简单的PHP源代码"></p>
+<p>阅读代码可知，该代码通过网页的get方法获取两个变量a和b，然后进行三次判断，通过传入合适的变量值即可得到flag1和flag2。再分别看到三次判断，第一个if语句中，要令a的值为0且a，这咋一看不可能，但在PHP中 “==” 会将变量转换为常量的类型，再进行判断，而 ‘0a’ 在转换为数字之后就是数字 0，因此可以通过该if语句，并输出flag1。关于“==”和“===”的区别可以通过如下代码的输出印证。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = <span class="string">'1a'</span>;</span><br><span class="line"><span class="keyword">echo</span> $a, <span class="string">"\n"</span>;</span><br><span class="line"><span class="keyword">if</span> ($a == <span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'1a==1'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ($a === <span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'1a===1'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>之后是第二个if语句，该语句中的 <code>is_numeric</code> 函数用于判断传入的参数类型是否为数字，若为数字类型则返回True否则为False，结合第三个if语句，可以得知b的值要大于1234且不能为数字，与第一个if语句相同，“&gt;”和“&lt;”并不会进行类型判断，所以这里可以使用b=9999a，使得b既不是数字，又大于1234。因此传入的参数为：<code>/?a=0a&amp;b=9999a</code>。</p>
+<p><img src="./8-2.png" alt="flag"></p>
+<h2 id="9-xff-referer"><a href="#9-xff-referer" class="headerlink" title="9. xff_referer"></a>9. xff_referer</h2><p>题目描述如下：</p>
+<blockquote>
+<p>X老师告诉小宁其实xff和referer是可以伪造的。</p>
+</blockquote>
+<p>由题目描述可知，本题的要点是伪造xff和referer，再来看看网页，打开网页提示ip必须为123.123.123.123，故先使用xff伪造IP。</p>
+<p><img src="./9-1.png" alt="xff_referer"></p>
+<p>故先使用xff伪造IP地址。在BurpSuite中抓包并修改请求头，添加字段X-Forwarded-For并将值设为123.123.123.123。最后的请求头如下图所示。</p>
+<p><img src="./9-2.png" alt="添加XFF字段"></p>
+<p>再然后要求来自google.com，同样在BurpSuite中向请求头添加Referer字段，值为<a href="https://www.google.com。最后在网页中得到flag。" target="_blank" rel="noopener">https://www.google.com。最后在网页中得到flag。</a></p>
+<p><img src="./9-3.png" alt="添加Referer字段"></p>
+<h2 id="10-webshell"><a href="#10-webshell" class="headerlink" title="10. webshell"></a>10. webshell</h2><p>题目描述如下：</p>
+<blockquote>
+<p>小宁百度了php一句话,觉着很有意思,并且把它放在index.php里。</p>
+</blockquote>
+<p>打开网页看看是什么。</p>
+<p><img src="./10-1.png" alt="webshell"></p>
+<p>结合题目描述和网页给的PHP代码，可以得知本题的要点是webshell的使用，因此该PHP代码既是执行远程命令的。简单分析一下这句最简单的后门，“@”表示隐藏错误输出，<code>eval</code>函数在PHP中会将传入的参数作为PHP语句直接执行，注意这里是作为PHP执行的，而不是直接shell，所以如果想执行shell命令要再加个system函数。这个后门可以通过中国菜刀直接使用，配置如下图所示，地址栏右侧应填入密码，即post过去的变量名，这里使用的是shell。</p>
+<p><img src="./10-2.png" alt="caidao参数配置"></p>
+<p>除了使用菜刀，也可以通过BurpSuite直接修改HTTP请求来完成，如下图所示，注意因为<code>eval</code>是执行PHP命令，所以参数末尾要加上“；”。</p>
+<p><img src="./10-3.png" alt="flag"></p>
+<h2 id="11-command-execution"><a href="#11-command-execution" class="headerlink" title="11. command_execution"></a>11. command_execution</h2><p>题目的描述如下：</p>
+<blockquote>
+<p>小宁写了个ping功能,但没有写waf,X老师告诉她这是非常危险的，你知道为什么吗。</p>
+</blockquote>
+<p>再来看看网页；</p>
+<p><img src="./11-1.png" alt="朴实无华的ping页面"></p>
+<p>结合描述和网页，可以推断要点在于这个ping命令的执行，没有waf代表可以执行其他的命令，而不止是ping，尝试一下ls命令。</p>
+<p><img src="./11-2.png" alt="ls"></p>
+<p>可以看到ls命令成功执行，且网页根目录下只有一个index.php。接下来要做的就是找flag，最后在home中找到flag.txt。</p>
+<p><img src="./11-3.png" alt="flag"></p>
+<h2 id="12-simple-js"><a href="#12-simple-js" class="headerlink" title="12. simple_js"></a>12. simple_js</h2><p>描述如下：</p>
+<blockquote>
+<p>小宁发现了一个网页，但却一直输不对密码。(Flag格式为 Cyberpeace{xxxxxxxxx} )</p>
+</blockquote>
+<p>打开网页看看。</p>
+<p><img src="./12-1.png" alt="输入密码就完事了"></p>
+<p>所以只需要输入正确的密码就可以了，但是密码又是多少呢，F12看一下网页源代码，可以看到一段JavaScript脚本如下。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dechiffre</span>(<span class="params">pass_enc</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> pass = <span class="string">"70,65,85,88,32,80,65,83,83,87,79,82,68,32,72,65,72,65"</span>;</span><br><span class="line">    <span class="keyword">var</span> tab  = pass_enc.split(<span class="string">','</span>);</span><br><span class="line">    <span class="keyword">var</span> tab2 = pass.split(<span class="string">','</span>);</span><br><span class="line">    <span class="keyword">var</span> i,j,k,l=<span class="number">0</span>,m,n,o,p = <span class="string">""</span>;</span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">    j = tab.length;</span><br><span class="line">    k = j + (l) + (n=<span class="number">0</span>);</span><br><span class="line">    n = tab2.length;</span><br><span class="line">    <span class="keyword">for</span>(i = (o=<span class="number">0</span>); i &lt; (k = j = n); i++ )</span><br><span class="line">    &#123;</span><br><span class="line">    	o = tab[i-l];</span><br><span class="line">    	p += <span class="built_in">String</span>.fromCharCode((o = tab2[i]));</span><br><span class="line">        <span class="keyword">if</span>(i == <span class="number">5</span>)</span><br><span class="line">        	<span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(i = (o=<span class="number">0</span>); i &lt; (k = j = n); i++ )</span><br><span class="line">    &#123;</span><br><span class="line">    	o = tab[i-l];</span><br><span class="line">        <span class="keyword">if</span>(i &gt; <span class="number">5</span> &amp;&amp; i &lt; k<span class="number">-1</span>)</span><br><span class="line">            p += <span class="built_in">String</span>.fromCharCode((o = tab2[i]));</span><br><span class="line">    &#125;</span><br><span class="line">    p += <span class="built_in">String</span>.fromCharCode(tab2[<span class="number">17</span>]);</span><br><span class="line">    pass = p;</span><br><span class="line">    <span class="keyword">return</span> pass;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">String</span>[<span class="string">"fromCharCode"</span>](dechiffre(<span class="string">"\x35\x35\x2c\x35\x36\x2c\x35\x34\x2c\x37\x39\x2c\x31\x31\x35\x2c\x36\x39\x2c\x31\x31\x34\x2c\x31\x31\x36\x2c\x31\x30\x37\x2c\x34\x39\x2c\x35\x30"</span>));</span><br><span class="line"></span><br><span class="line">h = <span class="built_in">window</span>.prompt(<span class="string">'Enter password'</span>);</span><br><span class="line">alert( dechiffre(h) );</span><br></pre></td></tr></table></figure>
+
+<p>具体的语句就不一一解析了，可以确定的一点是 <code>dechiffre</code> 函数传入的参数并不会对输出有任何影响，也就是说无论你输入的密码是什么，最后得到的值都是 <code>FAUX PASSWORD HAHA</code> 。</p>
+<p>那么正确的打开方式应该是怎样的呢？首先可以确定的是传入<code>dechiffre</code>函数的那串字符与最终的flag应该有直接关联，所以将字符串丢进python中转码，得到如下字符串，保存备用。</p>
+<p><img src="./12-3.png" alt="55,56,54,79,115,69,114,116,107,49,50"></p>
+<p>接下来简单分析一下<code>dechiffre</code>函数干了些什么，由于通过各种重新赋值的方式，传入的参数并没有真正的参与到结果的运算中，这也是保证函数输出不变的方法。所以关注点应当落在对tab2的处理上，首先精简一下代码，去掉无用的部分。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dechiffre</span>(<span class="params">pass_enc</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> pass = <span class="string">"70,65,85,88,32,80,65,83,83,87,79,82,68,32,72,65,72,65"</span>;</span><br><span class="line">    <span class="keyword">var</span> tab2 = pass.split(<span class="string">','</span>);</span><br><span class="line">    <span class="keyword">var</span> i,j,k,l=<span class="number">0</span>,m,n,o,p = <span class="string">""</span>;</span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">    k = j + (l) + (n=<span class="number">0</span>);</span><br><span class="line">    n = tab2.length;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>;; i++ )</span><br><span class="line">    &#123;</span><br><span class="line">    	p += <span class="built_in">String</span>.fromCharCode((o = tab2[i]));</span><br><span class="line">        <span class="keyword">if</span>(i == <span class="number">5</span>)</span><br><span class="line">        	<span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; n; i++ )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(i &gt; <span class="number">5</span> &amp;&amp; i &lt; n<span class="number">-1</span>)</span><br><span class="line">            p += <span class="built_in">String</span>.fromCharCode((o = tab2[i]));</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="comment">// 上述都是废话，得到的最后结果就是 FAUX PASSWORD HAHA 。</span></span><br><span class="line">    p += <span class="built_in">String</span>.fromCharCode(tab2[<span class="number">17</span>]);  <span class="comment">// 这里才是重点</span></span><br><span class="line">    pass = p;</span><br><span class="line">    <span class="keyword">return</span> pass;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过分析操作逻辑之后，并没有什么好的思路，函数主体不改动的情况下没有办法得到其他输出，但因为本题的flag来源就是这一段JavaScript代码，所以应当存在一个函数能得到正确的flag。于是想到题目描述特别给出的flag格式提示，最终得到的flag只是大括号内的主体。综上所述，flag只有一个，那就是在代码中出现多次的 <code>String.fromCharCode</code> 函数，尝试分别将pass和之前转换的字符串分别作为参数传入，提交之后可知转换后的字符串是正确的flag，对应的JavaScript代码如下。</p>
+<p><img src="./12-4.png" alt="flag"></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>攻防世界的Web方向新手练习区12个题目到此就全都完成了，后续的进阶区Writeup做完几题再一起写下来，剩下的是我的碎碎念时间。</p>
+<p>写到这里真不容易，虽然每一题在我开始做的时候都觉得不难，但是写成Writeup出来还是花费挺多时间。虽然访问量不大，但还是谢谢各位能看到这里！题目中如有任何疏漏和错误还请各位多多指教，毕竟我也只是刚入门的萌新，在此谢过各位大佬。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    zcy
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://changyoo.xyz/2020/07/01/Web-adworld-beginner/" title="Web-1 攻防世界Web入门题Writeup">https://changyoo.xyz/2020/07/01/Web-adworld-beginner/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/01/learning-note-docker/" rel="next" title="Docker学习笔记">
+                <i class="fa fa-chevron-left"></i> Docker学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">zcy</p>
+              <p class="site-description motion-element" itemprop="description">War. War never changes...</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SSoyca" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="wgYazp8wt@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-view-source"><span class="nav-number">2.</span> <span class="nav-text">1. view_source</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-get-post"><span class="nav-number">3.</span> <span class="nav-text">2. get_post</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-robots"><span class="nav-number">4.</span> <span class="nav-text">3. robots</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-backup"><span class="nav-number">5.</span> <span class="nav-text">4. backup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-cookie"><span class="nav-number">6.</span> <span class="nav-text">5. cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-disabled-button"><span class="nav-number">7.</span> <span class="nav-text">6.disabled_button</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-weak-auth"><span class="nav-number">8.</span> <span class="nav-text">7. weak_auth</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-simple-php"><span class="nav-number">9.</span> <span class="nav-text">8. simple_php</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-xff-referer"><span class="nav-number">10.</span> <span class="nav-text">9. xff_referer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-webshell"><span class="nav-number">11.</span> <span class="nav-text">10. webshell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-command-execution"><span class="nav-number">12.</span> <span class="nav-text">11. command_execution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-simple-js"><span class="nav-number">13.</span> <span class="nav-text">12. simple_js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">14.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zcy</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://zcysblogs.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://changyoo.xyz/2020/07/01/Web-adworld-beginner/';
+          this.page.identifier = '2020/07/01/Web-adworld-beginner/';
+          this.page.title = 'Web-1 攻防世界Web入门题Writeup';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zcysblogs.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
